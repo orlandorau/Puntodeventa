@@ -1,0 +1,285 @@
+// ProyectoFinal.cpp : Defines the entry point for the console application.
+//
+
+#include "stdafx.h"
+#include<iostream>
+#include<conio.h>
+#include<string>
+#include<stdio.h>
+#include<fstream>
+#include<cstring>
+#include<stdlib.h>
+
+
+
+using namespace std;
+//variables Globales.
+
+const int POS=20;//preguntar si es posible hacer un arreglo dentro de una estructura
+const int AUX=30;
+struct persona
+{
+  char nombre[POS];
+	char ape_pat[POS];
+	char ape_mat[POS];
+	char FecNac[11];
+	int telefono;
+	string direccion;
+	string correo_elec;
+}agenda[AUX];
+
+struct Articulos
+{
+	char nombre[POS];
+	string comentarios;
+	char fecent[12];//fecha de entrada
+	char fecsal[12];//fecha de salida
+	string clasificacion;
+	int cantidad;
+}Almacen[AUX];
+
+
+//Variables globales
+int numper=0;
+
+//declarion de Prototipos
+void agregar_persona();
+void agregar_articulo();
+int abrir_persona();
+void buscar_persona();
+void guardar_el_ultimo(int u);
+int leeUltimo();
+
+
+//inicio del main el main se inicializo en int por que va a regresar los valores a un archivo en txt.
+int main()
+{
+	int opc;
+	do{
+		cout<<"\t\t___________________________\t\t\n";
+		cout<<"\t\t****Punto de Venta*********\n";
+		cout<<"\t\t___________________________\t\t\n";
+		cout<<"1) Agregar Persona\n";
+		cout<<"2) Agregar Articulo\n";
+		cout<<"3) Buscar Persona\n";
+		cout<<"4) Buscar Articulo\n";
+		cout<<"5) Imprimir Contactos\n";
+		cout<<"6) Eliminar Contactos\n";
+
+		cout<<"Que opcion desea \n";
+		cin>>opc;
+		system("cls");
+		switch(opc)
+		{
+			case 1:
+				agregar_persona();
+				break;
+			case 2:
+				agregar_articulo();
+				break;
+			case 3:
+				abrir_persona();
+				buscar_persona();
+				break;
+
+		}
+	}while(opc!=8);
+	system("pause");
+}
+void guardar_el_ultimo(int u)
+{
+	ofstream fileu;
+	fileu.open("ultimoproducto.txt");
+	fileu<<u;
+	fileu.close();
+}
+
+int leeUltimo()
+{
+	ifstream fileu;
+	int u;
+	fileu.open("ultimoproducto.txt");
+	fileu>> u;
+	fileu.close();
+	return u;
+}
+void agregar_persona()
+{	
+	numper=leeUltimo();
+	cout<<"Digite el nombre:\n ";
+     cin>>agenda[numper].nombre;
+     cout<<"Digite el Apellido Paterno: \n";
+     cin>>agenda[numper].ape_pat;
+	 cout<<"Digite el Apellido Materno: \n";
+     cin>>agenda[numper].ape_mat;
+	 cout<<"Digita tu fecha de Nacimiento con forme al Formato dd/mm/aaaa\n";
+	 cin>>agenda[numper].FecNac;
+     cout<<"Digite el numero de telefono: \n";
+     cin>>agenda[numper].telefono;
+     cout<<"Introducir Direccion: \n";
+	 cin >> agenda[numper].direccion;
+     cout<<"Digitar correo electronico:\n ";
+     cin >> agenda[numper].correo_elec;
+
+     numper++;
+     cout<<"\n\n LOS DATOS SE GUARDARON CON EXITO°°\n\n";
+	
+	 ofstream out("contactos.txt",ios::app);
+	
+        for(int i=0; i<numper; i++){
+                   out<<"N˙mero de Registro: "<<numper<<endl;
+				   out<<"Nombre  ==>:"<<agenda[i].nombre<<" "<<agenda[i].ape_pat<<" "<<agenda[i].ape_mat<<endl;
+				   out<<"Fecha de Nacimiento ==>:"<<agenda[i].FecNac<<endl;
+                   out<<"TÈlefono ==>:"<<agenda[i].telefono<<endl;
+                   out<<"DirecciÛn ==>:"<<agenda[i].direccion<<endl;
+                   out<<"Correo ==>:"<<agenda[i].correo_elec<<"\n\n"<<endl;
+				   i=1;
+                   }
+		
+                    system("pause");
+	out.close();
+     system("cls");
+}
+
+
+
+void agregar_articulo()
+{	int opc;
+	do{
+	cout<<"Digite el nombre del articulo:\n ";
+	cin>>Almacen[numper].nombre;
+     cout<<"Comentarios sobre el Articulo: \n";
+	 cin>>Almacen[numper].comentarios;
+	 cout<<"Digite la fecha de Entrada con forme al ejemplo: dd/mm/aaaa: \n";
+	 cin>>Almacen[numper].fecent;
+     cout<<"Cuantas unidades son:";
+	 cin >> Almacen[numper].cantidad;
+
+     numper++;
+     cout<<"\n\n LOS DATOS SE GUARDARON CON EXITO°°\n\n";
+	
+	 ofstream out("articulos.txt",ios_base::app);
+
+        for(int i=0; i<numper; i++){
+                   out<<"N˙mero de Registro: "<<i+1<<endl;
+				   out<<"Nombre del articulo ==>:"<<Almacen[i].nombre<<endl;
+				   out<<"Descripcion del producto ==>:"<<Almacen[i].comentarios;
+				   out<<"Fecha de Entrada ==>:"<<Almacen[i].fecent<<endl;
+				   out<<"Cuantas Unidades son ==>:"<<Almacen[i].cantidad<<endl;
+                  
+				   i++;
+                   }
+		
+                    system("pause");
+	}while(opc);
+		cout<<"Desea capturar otro si=1, no=2";
+
+	out.close();
+     system("cls");
+}
+
+
+int abrir_persona()
+{
+	int k=0;
+	char descripccion[300];
+	ifstream leer;
+	leer.open("contactos.txt");
+	
+	if(leer.is_open())
+	{
+		cout<<"El archivo se abrio correctamente buscar\n"<<endl;
+		while(!leer.eof()){
+	
+			leer.getline(descripccion,300);
+				   leer>>agenda[k].nombre>>agenda[k].ape_pat>>agenda[k].ape_mat;
+				   leer>>agenda[k].FecNac;
+                   leer>>agenda[k].telefono;
+                   leer>>agenda[k].direccion;
+                   leer>>agenda[k].correo_elec;
+				   
+				   cout<<agenda[k].nombre<<endl<<agenda[k].FecNac<<endl<<agenda[k].telefono<<endl;
+				   
+				
+				   system("pause");
+	}
+		leer.close();
+		}
+	else
+	{
+		cout<<"El archivo no se abrior \n"<<endl;
+	}
+
+	return 0;
+}
+
+void buscar_persona()
+{
+     int i, j, op ,num;//variables de control
+     char nom[25]; //nombre que va a buscar
+     int encontrado=0;
+     cout<<"desea buscarlo por: \n1. Nombre \n2.Telefono \n";
+     cin>>op;
+     switch(op){
+           case 1:
+           cout<<"Escriba el nombre que va a buscar \n";
+           cin>>nom;
+           for(i=0;i<numper;i++){
+             if(strcmp(agenda[i].nombre, nom)== 0){
+                 if (agenda[i].telefono!=0){
+                   cout<<"Numero de Registro: "<<i+1<<endl;
+				   cout<<"Nombre  ==>:"<<agenda[i].nombre<<" "<<agenda[i].ape_pat<<" "<<agenda[i].ape_mat<<endl;
+				   cout<<"Fecha de Nacimiento ==>:"<<agenda[i].FecNac;
+                   cout<<"Telefono ==>:"<<agenda[i].telefono<<endl;
+                   cout<<"Direccion ==>:"<<agenda[i].direccion<<endl;
+                   cout<<"Correo ==>:"<<agenda[i].correo_elec<<endl;
+                   cout<<"-----------------------------------------"<<endl;
+                   j=1;
+                   system("pause");
+                   system("cls");
+                   }
+
+                   }
+
+                 }
+                 if(j!=1){
+                 cout<<"No exÌste esa persona en la lista de contactos..."<<endl;
+                   system("pause");
+                   system("cls");
+           }
+
+           break;
+           case 2:
+           cout<<"ingrese el telefono de la persona que va a buscar: \n";
+           cin>>num;
+     for (i=0;i<numper;i++){
+         if(agenda[i].telefono == num){
+         encontrado=1;
+         j=i;
+         break;
+         }
+         }
+
+
+if (encontrado==1){
+                   cout<<"Numero de Registro: "<<i+1<<endl;
+				   cout<<"Nombre  ==>:"<<agenda[i].nombre<<" "<<agenda[i].ape_pat<<" "<<agenda[i].ape_mat<<endl;
+				   cout<<"Fecha de Nacimiento ==>:"<<agenda[i].FecNac;
+                   cout<<"Telefono ==>:"<<agenda[i].telefono<<endl;
+                   cout<<"Direccion ==>:"<<agenda[i].direccion<<endl;
+                   cout<<"Correo ==>:"<<agenda[i].correo_elec<<endl;
+				   cout<<"-------------------------------------------------"<<endl;
+                   }
+                   else
+                   cout<<"No exÌste ese telefono..."<<endl;
+                   system("pause");
+                   system("cls");
+                   }
+}
+
+
+
+
+
+
+
